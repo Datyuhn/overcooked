@@ -9,12 +9,11 @@ public class PlayerAnimator : MonoBehaviour
 
     [SerializeField]
     private Player player;
-    void Awake()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
     }
-
-    void Update()
+    private void Update()
     {
         animator.SetBool(IS_WALKING, player.IsWalking());
     }
