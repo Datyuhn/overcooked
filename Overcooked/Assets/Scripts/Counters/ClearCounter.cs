@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class ClearCounter : BaseCounter
 {
-    [SerializeField] private KitchenObjectSpawn kitchenObjectSpawn;
+    [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
+    public override void InteractAlternate(Player player)
+    {
+
+    }
     public override void Interact(Player player)
     {
         if (!HasKitchenObject())
@@ -15,11 +19,31 @@ public class ClearCounter : BaseCounter
                 player.GetKitchenObject().SetKitchenObjectParent(this);
             }
         }
-        else
+        else // If having kitchen object
         {
-            if (!player.HasKitchenObject())
+            if (player.HasKitchenObject()) // Is player caring something
             {
-                this.GetKitchenObject().SetKitchenObjectParent(player);
+                if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) // Is player holding the plate
+                {
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                    {
+                        GetKitchenObject().DestroySelf();
+                    }
+                } 
+                else // Player not hold the plate
+                {
+                    if (GetKitchenObject().TryGetPlate(out plateKitchenObject)) // Is plate on the counter
+                    {
+                        if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
+                        {
+                            player.GetKitchenObject().DestroySelf();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                GetKitchenObject().SetKitchenObjectParent(player);
             }
         }
     }   

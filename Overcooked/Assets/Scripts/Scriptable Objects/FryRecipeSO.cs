@@ -5,8 +5,6 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class FryRecipeSO : ScriptableObject
 {
-    public KitchenObjectSpawn input, output;
+    public KitchenObjectSO input, output;
     public float fryTimeMax;
-
-
 }

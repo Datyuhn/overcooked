@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class KitchenObjects : MonoBehaviour
 {
-    [SerializeField] private KitchenObjectSpawn kitchenObjectSpawn;
+    [SerializeField] private KitchenObjectSO kitchenObjectSO;
     private IKitchenObjectParent kitchenObjectParent;
-    public KitchenObjectSpawn GetKitchenObjectSO()
+    public KitchenObjectSO GetKitchenObjectSO()
     {
-        return kitchenObjectSpawn;
+        return kitchenObjectSO;
     }
     public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
     {
@@ -27,8 +27,6 @@ public class KitchenObjects : MonoBehaviour
 
         transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
         transform.localPosition = Vector3.zero;
-
-        Debug.Log(this.kitchenObjectParent);
     }
     public IKitchenObjectParent GetKitchenObjectParent()
     {
@@ -39,10 +37,22 @@ public class KitchenObjects : MonoBehaviour
         kitchenObjectParent.ClearKitchenObject();
         Destroy(gameObject);
     }
-
-    public static KitchenObjects SpawnKitchenObject(KitchenObjectSpawn kitchenObjectSpawn, IKitchenObjectParent kitchenObjectParent)
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
     {
-        Transform kitchenObjectTransform = Instantiate(kitchenObjectSpawn.prefab);
+        if (this is PlateKitchenObject)
+        {
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        }
+        else
+        {
+            plateKitchenObject = null;
+            return false;
+        }
+    }
+    public static KitchenObjects SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
+    {
+        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
 
         KitchenObjects kitchenObject = kitchenObjectTransform.GetComponent<KitchenObjects>();
 
